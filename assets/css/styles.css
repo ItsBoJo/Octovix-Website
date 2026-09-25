@@ -1,0 +1,988 @@
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('../fonts/plus-jakarta-sans-latin.woff2') format('woff2');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('../fonts/plus-jakarta-sans-latin-ext.woff2') format('woff2');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---------------------------------------------------------------
+   Tokens
+   Radius rule for the whole site:
+     interactive controls (buttons, inputs, chips) .... pill
+     containers (cards, media, panels) ................ --r-lg
+     inner details (badges, small media) .............. --r-sm
+   Accent rule: --blue is the single accent. --navy carries any
+   white text, because white on --blue only reaches 3.3:1.
+   --------------------------------------------------------------- */
+:root {
+  --navy: #1e4f8c;
+  --navy-deep: #163c6b;
+  --blue: #3a8dff;
+  --blue-100: #bfd7ff;
+  --blue-50: #e8f1ff;
+  --bg: #f5f6f7;
+  --surface: #fff;
+  --surface-2: #fff;
+  --ink: #121212;
+  --ink-2: #4a4e57;
+  --ink-3: #656a73;
+  --line: #e3e6ea;
+  --line-strong: #d3d8df;
+
+  /* Primary action + accent text are tokenised because the light-theme pair
+     (white on --navy) drops to 3.4:1 once --navy lightens for dark mode. */
+  --btn-bg: var(--navy);
+  --btn-bg-hover: var(--navy-deep);
+  --btn-fg: #fff;
+  --accent-text: var(--navy);
+
+  --r-lg: 20px;
+  --r-sm: 12px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(30, 79, 140, .06), 0 2px 8px rgba(30, 79, 140, .05);
+  --shadow-md: 0 4px 12px rgba(30, 79, 140, .07), 0 16px 32px -12px rgba(30, 79, 140, .12);
+  --shadow-lg: 0 24px 60px -18px rgba(18, 32, 56, .28);
+
+  --wrap: 1200px;
+  --gutter: clamp(20px, 5vw, 40px);
+  --section-y: clamp(72px, 9vw, 128px);
+  --nav-h: 68px;
+
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  color-scheme: light;
+}
+
+/* Dark tokens apply when the system prefers dark AND the visitor hasn't
+   explicitly chosen light, OR when the visitor has explicitly chosen dark
+   (the toggle sets data-theme via assets/js/main.js and persists it in
+   localStorage). This order lets an explicit choice win in both directions. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --navy: #4d8de0;
+    --navy-deep: #1e4f8c;
+    --blue: #3a8dff;
+    --blue-100: #24467d;
+    --blue-50: #16294a;
+    --bg: #0c1624;
+    --surface: #121f33;
+    --surface-2: #16263d;
+    --ink: #f2f5f9;
+    --ink-2: #b3bfd0;
+    --ink-3: #8c99ab;
+    --line: #22344f;
+    --line-strong: #2d4262;
+    --btn-bg: #9ec5f5;
+    --btn-bg-hover: #bcd8fa;
+    --btn-fg: #0c1624;
+    --accent-text: #a8c9f5;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3), 0 2px 8px rgba(0, 0, 0, .24);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, .32), 0 16px 32px -12px rgba(0, 0, 0, .45);
+    --shadow-lg: 0 24px 60px -18px rgba(0, 0, 0, .6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  /* inverted primary: light blue face, dark label, echoing the app's own
+     Save and Log food buttons */
+  --navy: #4d8de0;
+  --navy-deep: #1e4f8c;
+  --blue: #3a8dff;
+  --blue-100: #24467d;
+  --blue-50: #16294a;
+  --bg: #0c1624;
+  --surface: #121f33;
+  --surface-2: #16263d;
+  --ink: #f2f5f9;
+  --ink-2: #b3bfd0;
+  --ink-3: #8c99ab;
+  --line: #22344f;
+  --line-strong: #2d4262;
+  --btn-bg: #9ec5f5;
+  --btn-bg-hover: #bcd8fa;
+  --btn-fg: #0c1624;
+  --accent-text: #a8c9f5;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3), 0 2px 8px rgba(0, 0, 0, .24);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, .32), 0 16px 32px -12px rgba(0, 0, 0, .45);
+  --shadow-lg: 0 24px 60px -18px rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------
+   Reset + base
+   --------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img, svg, picture { max-width: 100%; display: block; }
+button, input { font: inherit; color: inherit; }
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+p { margin: 0; }
+a { color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  /* fixed, not absolute: an absolute skip link sits at the top of the document
+     and is off-screen when focused after the page has been scrolled */
+  position: fixed;
+  left: 12px;
+  top: -60px;
+  z-index: 200;
+  padding: 12px 20px;
+  border-radius: var(--r-pill);
+  background: var(--navy-deep);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top .2s var(--ease);
+}
+.skip-link:focus-visible { top: 12px; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------------------
+   Layout
+   --------------------------------------------------------------- */
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.section { padding-block: var(--section-y); }
+.section--tight { padding-block: clamp(56px, 6vw, 88px); }
+[id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px;
+  padding: 7px 14px 7px 12px;
+  border: 1px solid var(--blue-100);
+  border-radius: var(--r-pill);
+  background: var(--blue-50);
+  color: var(--accent-text);
+  font-size: .8125rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  line-height: 1;
+}
+.eyebrow svg { width: 15px; height: 15px; flex: none; }
+
+.lead {
+  color: var(--ink-2);
+  font-size: clamp(1.0625rem, .95rem + .5vw, 1.1875rem);
+  line-height: 1.6;
+  max-width: 56ch;
+}
+
+.section-head { max-width: 46rem; margin-bottom: clamp(40px, 5vw, 60px); }
+.section-head h2 { font-size: clamp(2rem, 1.3rem + 2.6vw, 3rem); }
+.section-head .lead { margin-top: 18px; }
+.section-head--center { margin-inline: auto; text-align: center; }
+.section-head--center .lead { margin-inline: auto; }
+
+/* ---------------------------------------------------------------
+   Buttons + form controls  (all pill)
+   --------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 15px 26px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .2s var(--ease), border-color .2s var(--ease),
+    color .2s var(--ease), transform .12s var(--ease), box-shadow .2s var(--ease);
+}
+.btn:active { transform: translateY(1px); }
+
+.btn--primary {
+  background: var(--btn-bg);
+  border-color: var(--btn-bg);
+  color: var(--btn-fg);
+  box-shadow: var(--shadow-sm);
+}
+.btn--primary:hover { background: var(--btn-bg-hover); border-color: var(--btn-bg-hover); box-shadow: var(--shadow-md); }
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.btn--ghost:hover { border-color: var(--navy); color: var(--navy); background: var(--surface); }
+
+/* Lives only on .panel-dark, whose gradient is theme-independent, so these
+   stay literal rather than following the light/dark tokens. */
+.btn--light {
+  background: #fff;
+  border-color: #fff;
+  color: #163c6b;
+}
+.btn--light:hover { background: #e8f1ff; border-color: #e8f1ff; }
+
+.btn--sm { padding: 11px 20px; font-size: .9375rem; }
+
+/* Signup form ------------------------------------------------- */
+.signup { width: 100%; max-width: 500px; }
+.signup__row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.signup__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 15px 22px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1rem;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+/* Instructional placeholder colour preserved from the original design. */
+.signup__input::placeholder { color: #b0b0b5; opacity: 1; }
+.signup__input:hover { border-color: var(--line-strong); }
+.signup__input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(58, 141, 255, .22); }
+.signup__btn { flex: 0 0 auto; }
+
+.signup__note {
+  margin-top: 14px;
+  min-height: 1.4em;
+  font-size: .875rem;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.signup__note[data-state='error'] { color: #b4231f; font-weight: 600; }
+.signup__note[data-state='success'] { color: #1a6b3c; font-weight: 600; }
+.signup.is-busy .signup__btn { opacity: .65; pointer-events: none; }
+
+/* Signup on the dark CTA panel */
+.panel-dark .signup__input {
+  background: rgba(255, 255, 255, .96);
+  border-color: transparent;
+  color: var(--ink);
+}
+.panel-dark .signup__input:focus { box-shadow: 0 0 0 4px rgba(191, 215, 255, .4); border-color: #fff; }
+.panel-dark .signup__note { color: rgba(255, 255, 255, .78); }
+.panel-dark .signup__note[data-state='error'] { color: #ffc9c5; }
+.panel-dark .signup__note[data-state='success'] { color: #bfe9d0; }
+
+/* ---------------------------------------------------------------
+   Navigation
+   --------------------------------------------------------------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s var(--ease), background-color .25s var(--ease);
+}
+.nav.is-stuck {
+  border-bottom-color: var(--line);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .nav { background: var(--bg); }
+}
+
+.nav__inner {
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+  text-decoration: none;
+  flex: none;
+}
+.brand__mark { width: 30px; height: 30px; flex: none; color: var(--ink); }
+.brand__name {
+  font-size: 1.1875rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav__links a {
+  display: block;
+  padding: 9px 14px;
+  border-radius: var(--r-pill);
+  color: var(--ink-2);
+  font-size: .9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color .2s var(--ease), background-color .2s var(--ease);
+}
+.nav__links a:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+
+.nav__cta { flex: none; }
+
+/* Theme toggle: a pill icon button, sun/moon cross-fading. Hidden until JS
+   sets data-theme, so a no-JS visitor never sees a control that can't work
+   (the site otherwise just follows system preference). */
+.theme-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color .2s var(--ease), color .2s var(--ease), background-color .2s var(--ease);
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--navy); }
+.js .theme-toggle { display: inline-flex; }
+.legal-nav-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.theme-toggle svg {
+  width: 19px;
+  height: 19px;
+  flex: none;
+}
+.theme-toggle .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+.nav__toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.nav__toggle span {
+  position: relative;
+  display: block;
+  width: 17px;
+  height: 1.5px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform .25s var(--ease), background-color .25s var(--ease);
+}
+.nav__toggle span::before,
+.nav__toggle span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 17px;
+  height: 1.5px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform .25s var(--ease);
+}
+.nav__toggle span::before { top: -5.5px; }
+.nav__toggle span::after { top: 5.5px; }
+.nav__toggle[aria-expanded='true'] span { background: transparent; }
+.nav__toggle[aria-expanded='true'] span::before { transform: translateY(5.5px) rotate(45deg); }
+.nav__toggle[aria-expanded='true'] span::after { transform: translateY(-5.5px) rotate(-45deg); }
+
+.nav__panel { display: none; }
+
+@media (max-width: 860px) {
+  .nav__links, .nav__cta { display: none; }
+  .nav__toggle { display: inline-flex; }
+  .nav__panel {
+    display: block;
+    overflow: hidden;
+    max-height: 0;
+    border-top: 1px solid transparent;
+    transition: max-height .3s var(--ease), border-color .3s var(--ease);
+  }
+  .nav__panel.is-open {
+    max-height: 420px;
+    border-top-color: var(--line);
+  }
+  .nav__panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 14px 0 22px;
+    display: grid;
+    gap: 2px;
+  }
+  /* :not(.btn) so the panel's CTA keeps its own white-on-navy colour;
+     a bare `.nav__panel a` rule outranks `.btn--primary` on specificity. */
+  .nav__panel a:not(.btn) {
+    display: block;
+    padding: 13px 4px;
+    color: var(--ink);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--r-sm);
+  }
+  .nav__panel .btn { width: 100%; margin-top: 12px; }
+}
+
+/* ---------------------------------------------------------------
+   iPhone mockup
+   Aspect + corner ratios traced from an iPhone 17 Pro screenshot
+   (1206 x 2622 px). The screenshots already contain the status bar
+   and Dynamic Island, so the frame only supplies the enclosure.
+   --------------------------------------------------------------- */
+.phone {
+  position: relative;
+  width: 100%;
+  padding: 1.85%;
+  border-radius: 13.6% / 6.25%;
+  background:
+    linear-gradient(147deg, #5b6675 0%, #262d38 18%, #171c24 42%,
+      #39424f 63%, #1b2129 82%, #444d5b 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, .16),
+    inset 0 0 2px 1px rgba(255, 255, 255, .1),
+    var(--shadow-lg);
+  isolation: isolate;
+}
+.phone::after {
+  /* thin inner lip between enclosure and glass */
+  content: '';
+  position: absolute;
+  inset: 1.5%;
+  border-radius: 12.4% / 5.7%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .55);
+  pointer-events: none;
+  z-index: 2;
+}
+.phone__screen {
+  position: relative;
+  aspect-ratio: 1206 / 2622;
+  border-radius: 12.1% / 5.6%;
+  overflow: hidden;
+  background: #0d1b2e;
+  z-index: 1;
+}
+.phone__screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* side buttons */
+.phone__btn {
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(180deg, #4a5361, #222932);
+  border-radius: 2px;
+  z-index: 0;
+}
+.phone__btn--vol { left: -2px; top: 17%; height: 7.4%; }
+.phone__btn--vol2 { left: -2px; top: 26.5%; height: 7.4%; }
+.phone__btn--pwr { right: -2px; top: 22%; height: 11%; }
+
+.phone--float { animation: phone-float 7s ease-in-out infinite; }
+@keyframes phone-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.phone-caption {
+  margin-top: 20px;
+  text-align: center;
+  font-size: .9375rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------------
+   Hero  (asymmetric split)
+   --------------------------------------------------------------- */
+.hero {
+  position: relative;
+  padding-top: clamp(40px, 6vw, 76px);
+  padding-bottom: clamp(64px, 8vw, 104px);
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -22%;
+  right: -10%;
+  width: min(780px, 82vw);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 50% 50%,
+    rgba(58, 141, 255, .22) 0%, rgba(58, 141, 255, .1) 42%, transparent 68%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.14fr) minmax(0, .86fr);
+  gap: clamp(32px, 4vw, 56px);
+  align-items: center;
+}
+.hero h1 {
+  font-size: clamp(2.25rem, 1rem + 3.15vw, 3.4rem);
+  margin-bottom: 22px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--navy);
+}
+.hero .lead { max-width: 33rem; }
+.hero .signup { margin-top: 30px; }
+
+.hero__media {
+  justify-self: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+/* ---------------------------------------------------------------
+   Showcase  (centred head, staggered phones)
+   --------------------------------------------------------------- */
+.showcase { background: var(--surface); border-block: 1px solid var(--line); }
+.showcase__stage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+  max-width: 760px;
+  margin-inline: auto;
+}
+.showcase__item { max-width: 300px; width: 100%; justify-self: center; }
+.showcase__item:first-child { transform: translateY(28px); }
+
+/* ---------------------------------------------------------------
+   Features bento  (4 items, 4 cells, asymmetric)
+   --------------------------------------------------------------- */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+}
+.bento__cell {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(26px, 3vw, 38px);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease),
+    border-color .3s var(--ease);
+}
+.bento__cell:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--line-strong);
+}
+.bento__cell--wide { grid-column: span 2; }
+/* text-only cells sit beside a taller media cell, so centre their block
+   rather than letting it hang from the top with dead space below */
+.bento__cell--text { justify-content: center; }
+.bento__cell--tint {
+  background: linear-gradient(150deg, var(--blue-50), var(--surface) 78%);
+  border-color: var(--blue-100);
+}
+.bento__cell h3 {
+  font-size: clamp(1.25rem, 1.1rem + .5vw, 1.5rem);
+  letter-spacing: -.02em;
+}
+.bento__cell p {
+  margin-top: 12px;
+  color: var(--ink-2);
+  font-size: 1rem;
+  max-width: 42ch;
+}
+.bento__icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--navy);
+  color: #fff;
+  flex: none;
+}
+.bento__icon svg { width: 22px; height: 22px; }
+
+/* Cell art: a real device peeking up from the bottom edge of the cell.
+   The frame is clipped by the cell, so the screenshot is never zoomed. */
+.bento__art {
+  position: relative;
+  margin-top: auto;
+  padding-top: 30px;
+  margin-inline: calc(clamp(26px, 3vw, 38px) * -1);
+  margin-bottom: calc(clamp(26px, 3vw, 38px) * -1);
+  height: 232px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.bento__art--sky { background: linear-gradient(180deg, transparent, rgba(58, 141, 255, .16)); }
+.bento__art--navy { background: linear-gradient(180deg, transparent, rgba(30, 79, 140, .12)); }
+.phone--peek { width: 212px; flex: none; }
+
+/* ---------------------------------------------------------------
+   How it works  (sticky heading + divided steps)
+   --------------------------------------------------------------- */
+.how { background: var(--surface); border-block: 1px solid var(--line); }
+.how__grid {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: clamp(32px, 6vw, 88px);
+  align-items: start;
+}
+.how__aside { position: sticky; top: calc(var(--nav-h) + 40px); }
+.how__aside h2 { font-size: clamp(2rem, 1.3rem + 2.6vw, 3rem); }
+.how__aside .lead { margin-top: 18px; }
+
+.steps { display: grid; }
+.step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 22px;
+  padding-block: clamp(26px, 3vw, 34px);
+  border-top: 1px solid var(--line);
+}
+.step:first-child { border-top: 0; padding-top: 0; }
+.step:last-child { padding-bottom: 0; }
+.step__dot {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-pill);
+  background: var(--blue-50);
+  color: var(--accent-text);
+  flex: none;
+}
+.step__dot svg { width: 20px; height: 20px; }
+.step h3 { font-size: 1.3125rem; letter-spacing: -.02em; }
+.step p { margin-top: 8px; color: var(--ink-2); font-size: 1rem; }
+
+/* ---------------------------------------------------------------
+   Promise band  (full-bleed brand blue, large type)
+   White is used only at display size; small copy is near-black,
+   both clear WCAG AA against #3A8DFF.
+   --------------------------------------------------------------- */
+.promise {
+  position: relative;
+  overflow: hidden;
+  background: var(--blue);
+  color: #fff;
+}
+/* The brand log, drawn on this exact blue in the original artwork. */
+.promise__mascot {
+  position: absolute;
+  right: -4%;
+  top: 50%;
+  width: min(38%, 460px);
+  height: auto;
+  transform: translateY(-50%) rotate(-6deg);
+  opacity: .5;
+  pointer-events: none;
+}
+.promise .wrap { position: relative; }
+.promise h2, .promise__list { max-width: 62%; }
+.promise h2 {
+  font-size: clamp(2.15rem, 1.1rem + 4.2vw, 4rem);
+  line-height: 1.02;
+  max-width: 20ch;
+}
+.promise__list {
+  list-style: none;
+  margin: clamp(44px, 5vw, 64px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 3vw, 44px);
+}
+.promise__list li { border-top: 2px solid rgba(18, 18, 18, .22); padding-top: 20px; }
+.promise__list h3 {
+  font-size: 1.25rem;
+  color: #fff;
+  letter-spacing: -.02em;
+}
+.promise__list p {
+  margin-top: 10px;
+  color: #121212;
+  font-size: .9688rem;
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------------
+   Notify CTA  (navy panel)
+   --------------------------------------------------------------- */
+.panel-dark {
+  background: linear-gradient(160deg, #1e4f8c 0%, #163c6b 58%, #12305a 100%);
+  color: #fff;
+  border-radius: var(--r-lg);
+  padding: clamp(40px, 6vw, 76px) clamp(26px, 5vw, 72px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.panel-dark::before {
+  content: '';
+  position: absolute;
+  inset: auto -10% -60% 30%;
+  height: 340px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(58, 141, 255, .5), transparent 66%);
+  pointer-events: none;
+}
+.panel-dark > * { position: relative; }
+.panel-dark h2 {
+  font-size: clamp(1.95rem, 1.25rem + 2.5vw, 2.85rem);
+  max-width: 18ch;
+  margin-inline: auto;
+}
+.panel-dark .lead {
+  margin: 18px auto 0;
+  color: rgba(255, 255, 255, .82);
+  max-width: 44ch;
+}
+.panel-dark .signup { margin: clamp(28px, 4vw, 38px) auto 0; }
+.panel-dark .eyebrow {
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .28);
+  color: #fff;
+}
+
+.storebadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: var(--r-pill);
+  font-size: .875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, .9);
+}
+.storebadge svg { width: 17px; height: 17px; }
+
+/* ---------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------- */
+.footer {
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  padding-block: clamp(48px, 6vw, 72px) 32px;
+}
+.footer__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(32px, 4vw, 56px);
+  padding-bottom: clamp(36px, 4vw, 52px);
+}
+.footer__about .lead {
+  margin-top: 16px;
+  font-size: .9688rem;
+  max-width: 32ch;
+}
+.footer h2 {
+  font-size: .8125rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+}
+.footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.footer ul a {
+  color: var(--ink-2);
+  font-size: .9688rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color .2s var(--ease);
+}
+.footer ul a:hover { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+
+.footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: .875rem;
+}
+
+/* ---------------------------------------------------------------
+   Legal pages
+   --------------------------------------------------------------- */
+.legal { max-width: 720px; }
+.legal h1 { font-size: clamp(2.15rem, 1.5rem + 2.4vw, 3rem); }
+.legal__meta { margin-top: 16px; color: var(--ink-3); font-size: .9375rem; }
+.legal h2 {
+  font-size: 1.3125rem;
+  margin-top: 44px;
+  margin-bottom: 12px;
+}
+.legal p, .legal li { color: var(--ink-2); }
+.legal p + p { margin-top: 14px; }
+.legal ul { margin: 14px 0 0; padding-left: 20px; display: grid; gap: 8px; }
+.legal a { color: var(--navy); text-underline-offset: 3px; }
+.legal__callout {
+  margin-top: 28px;
+  padding: 20px 24px;
+  border: 1px solid var(--blue-100);
+  border-left: 4px solid var(--blue);
+  border-radius: var(--r-sm);
+  background: var(--blue-50);
+  color: var(--ink-2);
+  font-size: .9688rem;
+}
+.legal__callout strong { color: var(--ink); }
+
+/* ---------------------------------------------------------------
+   Scroll reveal
+   --------------------------------------------------------------- */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ---------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .footer__top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer__about { grid-column: 1 / -1; }
+}
+
+@media (max-width: 900px) {
+  .hero__inner { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  .hero__media { max-width: 264px; order: 2; }
+  .hero .signup { max-width: none; }
+  .how__grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .how__aside { position: static; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bento__cell--wide { grid-column: span 2; }
+  .promise__list { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .promise__list li { padding-block: 22px; }
+  .promise__mascot { display: none; }
+  .promise h2, .promise__list { max-width: none; }
+}
+
+@media (max-width: 600px) {
+  :root { --nav-h: 60px; }
+  .bento { grid-template-columns: minmax(0, 1fr); }
+  .bento__cell--wide { grid-column: span 1; }
+  .showcase__stage { grid-template-columns: minmax(0, 1fr); gap: 44px; max-width: 280px; }
+  .showcase__item:first-child { transform: none; }
+  .signup__row { flex-direction: column; }
+  .signup__btn { width: 100%; }
+  .footer__top { grid-template-columns: minmax(0, 1fr); }
+  .footer__base { justify-content: flex-start; }
+  .step { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+}
+
+/* ---------------------------------------------------------------
+   Reduced motion
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+  .phone--float { animation: none; }
+}

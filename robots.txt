@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap: add once a domain is registered, e.g.
+# Sitemap: https://example.com/sitemap.xml
