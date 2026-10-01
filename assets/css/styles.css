@@ -319,19 +319,46 @@ a { color: inherit; }
   color: var(--ink-3);
 }
 .signup__note[data-state='error'] { color: #b4231f; font-weight: 600; }
-.signup__note[data-state='success'] { color: #1a6b3c; font-weight: 600; }
+/* Glow uses the raw --blue token (the brand's bright blue) in text-shadow,
+   but the actual letterforms are --accent-text (navy in light mode, a
+   lighter blue in dark mode) — the pair this project already uses
+   everywhere small text needs to sit near this blue, because --blue itself
+   is only ~3:1 against the page background and fails WCAG AA for text this
+   size. The shadow gives the "glowing blue" look; the fill keeps it legible. */
+.signup__note[data-state='success'] {
+  color: var(--accent-text);
+  font-size: .9375rem;
+  font-weight: 700;
+  text-shadow: 0 0 14px rgba(58, 141, 255, .55), 0 0 3px rgba(58, 141, 255, .5);
+  animation: signup-note-in .5s var(--ease);
+}
 .signup.is-busy .signup__btn { opacity: .65; pointer-events: none; }
+
+@keyframes signup-note-in {
+  from { opacity: 0; transform: translateY(3px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
 
 /* Signup on the dark CTA panel */
 .panel-dark .signup__input {
   background: rgba(255, 255, 255, .96);
   border-color: transparent;
-  color: var(--ink);
+  /* Literal, not var(--ink): this panel's background never changes with the
+     site theme, but --ink does — in dark mode it flips to near-white,
+     which would put near-white text on this near-white input. */
+  color: #121212;
 }
 .panel-dark .signup__input:focus { box-shadow: 0 0 0 4px rgba(191, 215, 255, .4); border-color: #fff; }
 .panel-dark .signup__note { color: rgba(255, 255, 255, .78); }
 .panel-dark .signup__note[data-state='error'] { color: #ffc9c5; }
-.panel-dark .signup__note[data-state='success'] { color: #bfe9d0; }
+.panel-dark .signup__note[data-state='success'] {
+  /* Literal, not var(--blue-100): that token goes dark/muted in site dark
+     mode (it's meant as a background tint there), which read as the "dark
+     blue" text you saw. This panel is always dark, so it always wants the
+     light pastel value regardless of site theme. */
+  color: #bfd7ff;
+  text-shadow: 0 0 14px rgba(58, 141, 255, .7), 0 0 3px rgba(58, 141, 255, .6);
+}
 
 /* ---------------------------------------------------------------
    Navigation

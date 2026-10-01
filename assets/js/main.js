@@ -180,7 +180,7 @@
         .then(function (res) {
           if (!res.ok) throw new Error('Request failed with ' + res.status);
           form.reset();
-          say('You are on the list. We will email you at launch.', 'success');
+          say("Thanks! We'll notify you when we're live.", 'success');
         })
         .catch(function () {
           say('That did not go through. Please try again in a moment.', 'error');

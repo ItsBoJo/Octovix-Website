@@ -28,23 +28,25 @@ serve.py              local preview only, not needed in production
 Total page weight is roughly 240 KB on first load, including fonts and both
 screenshots.
 
-## Connect the email signup
+## Email signup
 
-The two signup forms currently do nothing except validate the address. Until an
-endpoint is set they tell the visitor "Email signup is not connected yet" and
-log a warning to the console.
+Both signup forms POST `{"email": "..."}` as JSON to
+`https://signup.joinbluelog.com` (set via `data-endpoint` on each `<form>` in
+`index.html`) and treat any 2xx as success. Loading, success and error states
+are implemented in `assets/js/main.js`.
 
-To turn them on, set `data-endpoint` on both forms in `index.html` (one in the
-hero, one in the `#notify` section):
+That endpoint is a Cloudflare Worker, not part of this repo — see
+`../bluelog-signup-worker/worker.js`. It adds the address to a Resend
+Audience; no email is sent at signup time. The "BlueLog is live" email is
+sent later as a one-time Resend Broadcast to that audience, once
+`joinbluelog.com`'s sending domain is verified in Resend.
 
-```html
-<form class="signup" data-signup data-endpoint="https://your-endpoint" novalidate>
-```
-
-The form POSTs `{"email": "..."}` as JSON and treats any 2xx as success, which
-works directly with Formspree, Buttondown, ConvertKit and most form backends.
-Loading, success and error states are already implemented in
-`assets/js/main.js`.
+Until `signup.joinbluelog.com` resolves (joinbluelog.com's nameservers need
+to point at Cloudflare first), the endpoint will fail and the forms show the
+"That did not go through" error state — expected until the Worker's custom
+domain is live. To point the forms at a different backend instead, change
+`data-endpoint` on both `<form data-signup>` elements; any 2xx-on-success JSON
+endpoint works, so Formspree, Buttondown or ConvertKit would also work.
 
 ## Before launch
 
