@@ -120,6 +120,29 @@
     revealables.forEach(function (el) { revealer.observe(el); });
   }
 
+  /* --- Promise band: log mascot fades to full colour after a 3s dwell --
+     Starts a timer once at least half the section is on screen; leaving
+     the section cancels it and resets the log, so it can play again. */
+  var promiseSection = document.getElementById('promise');
+  var mascot = promiseSection && promiseSection.querySelector('.promise__mascot');
+  if (mascot && !reduceMotion && 'IntersectionObserver' in window) {
+    var dwellTimer = null;
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        if (!dwellTimer && !mascot.classList.contains('is-revealed')) {
+          dwellTimer = setTimeout(function () {
+            mascot.classList.add('is-revealed');
+            dwellTimer = null;
+          }, 3000);
+        }
+      } else {
+        clearTimeout(dwellTimer);
+        dwellTimer = null;
+        mascot.classList.remove('is-revealed');
+      }
+    }, { threshold: 0.5 }).observe(promiseSection);
+  }
+
   /* --- Email signup -------------------------------------------------
      Set data-endpoint on each <form data-signup> to a POST URL that
      accepts JSON {email}. Works as-is with Formspree, Buttondown,

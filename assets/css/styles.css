@@ -796,6 +796,15 @@ a { color: inherit; }
   transform: translateY(-50%) rotate(-6deg);
   opacity: .5;
   pointer-events: none;
+  transition: opacity 4s var(--ease);
+}
+/* main.js adds this after ~3s of the section staying in view, fading the log
+   from its washed-out state to the artwork's true colours (#1e4f8c, #3a8dff,
+   #bfd7ff). Reduced-motion visitors get the full colours straight away
+   instead of a timed reveal. */
+.promise__mascot.is-revealed { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .promise__mascot { opacity: 1; }
 }
 .promise .wrap { position: relative; }
 .promise h2, .promise__list { max-width: 62%; }
