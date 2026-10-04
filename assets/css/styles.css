@@ -651,7 +651,38 @@ a { color: inherit; }
 /* ---------------------------------------------------------------
    Showcase  (centred head, staggered phones)
    --------------------------------------------------------------- */
-.showcase { background: var(--surface); border-block: 1px solid var(--line); }
+.showcase {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+  border-block: 1px solid var(--line);
+}
+.showcase .wrap { position: relative; }
+
+/* Falling canopy (assets/js/canopy.js). It lives in the empty side margins:
+   the mask keeps the centre column, where the heading and phones sit, clear,
+   so it can never reduce text contrast. Hidden on narrower screens where the
+   phones stack and there is no empty space to fill. */
+.showcase__canopy {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease);
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 460px),
+    transparent calc(50% - 350px), transparent calc(50% + 350px),
+    #000 calc(50% + 460px), #000 100%);
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 460px),
+    transparent calc(50% - 350px), transparent calc(50% + 350px),
+    #000 calc(50% + 460px), #000 100%);
+}
+.showcase__canopy.is-ready { opacity: 1; }
+@media (max-width: 900px) {
+  .showcase__canopy { display: none; }
+}
 .showcase__stage {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
