@@ -100,7 +100,7 @@
         toggle.focus();
       }
     });
-    window.matchMedia('(min-width: 861px)').addEventListener('change', function (e) {
+    window.matchMedia('(min-width: 981px)').addEventListener('change', function (e) {
       if (e.matches) setOpen(false);
     });
   }

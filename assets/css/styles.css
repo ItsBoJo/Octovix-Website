@@ -497,7 +497,7 @@ a { color: inherit; }
 
 .nav__panel { display: none; }
 
-@media (max-width: 860px) {
+@media (max-width: 980px) {
   .nav__links, .nav__cta { display: none; }
   .nav__toggle { display: inline-flex; }
   .nav__panel {
@@ -614,9 +614,13 @@ a { color: inherit; }
 .hero::before {
   content: '';
   position: absolute;
-  top: -22%;
-  right: -10%;
-  width: min(780px, 82vw);
+  /* Glow is 2x its original size (was min(780px, 82vw)). The offsets pull it
+     back by a quarter of the new width so it stays centred where it was,
+     growing outward instead of sliding down and left. */
+  --glow: min(1560px, 164vw);
+  top: calc(-22% - var(--glow) / 4);
+  right: calc(-10% - var(--glow) / 4);
+  width: var(--glow);
   aspect-ratio: 1;
   background: radial-gradient(circle at 50% 50%,
     rgba(58, 141, 255, .22) 0%, rgba(58, 141, 255, .1) 42%, transparent 68%);
@@ -864,6 +868,76 @@ a { color: inherit; }
   font-size: .9688rem;
   line-height: 1.55;
   font-weight: 500;
+}
+
+/* ---------------------------------------------------------------
+   About Octovix: black and silver
+   A fixed look, like the blue promise band and the dark notify panel, so it
+   uses literal colours instead of the light/dark theme tokens. --surface is
+   pinned so the logo's head fill matches this black.
+   --------------------------------------------------------------- */
+.about {
+  --surface: #0a0a0b;
+  position: relative;
+  overflow: hidden;
+  color: #a9b0ba;
+  background:
+    radial-gradient(ellipse 55% 60% at 88% 0%, rgba(214, 220, 230, .12), transparent 70%),
+    linear-gradient(180deg, #101113, #08080a);
+  border-block: 1px solid rgba(255, 255, 255, .08);
+}
+.about .wrap { position: relative; max-width: 960px; }
+.about__mark { width: 46px; height: 46px; margin-bottom: 28px; color: #c9ced6; }
+.about h2 {
+  font-size: clamp(2.25rem, 1.4rem + 3.2vw, 3.75rem);
+  background: linear-gradient(180deg, #f7f8fa 20%, #a7aeb9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-bottom: .08em;
+}
+.about__lead {
+  margin-top: 22px;
+  max-width: 36ch;
+  color: #e3e6eb;
+  font-size: clamp(1.25rem, 1.05rem + .8vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -.015em;
+}
+.about__cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 5vw, 64px);
+  margin-top: clamp(44px, 6vw, 72px);
+  padding-top: clamp(28px, 4vw, 40px);
+  border-top: 1px solid rgba(255, 255, 255, .14);
+}
+.about h3 { font-size: 1.125rem; letter-spacing: -.01em; color: #f1f3f6; }
+.about__cols p { margin-top: 12px; max-width: 46ch; font-size: 1rem; }
+.about__contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 24px;
+  margin-top: clamp(36px, 5vw, 56px);
+  padding-top: clamp(24px, 3vw, 32px);
+  border-top: 1px solid rgba(255, 255, 255, .14);
+}
+.about__contact p { font-size: 1rem; }
+.about__mail {
+  display: inline-block;
+  padding: 14px 26px;
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: var(--r-pill);
+  color: #f1f3f6;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
+}
+.about__mail:hover { background: #e6e9ee; border-color: #e6e9ee; color: #0a0a0b; }
+@media (max-width: 700px) {
+  .about__cols { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ---------------------------------------------------------------
