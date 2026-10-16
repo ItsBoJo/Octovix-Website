@@ -143,6 +143,55 @@
     }, { threshold: 0.5 }).observe(promiseSection);
   }
 
+  /* --- Click-to-copy email -------------------------------------------
+     Links with data-copy copy their address instead of opening a mail app
+     (the mailto href stays as the no-JavaScript fallback). The element right
+     after the link, when there is one, shows "Copied." for about 2 seconds, then
+     fades out. */
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { /* fall through */ }
+      document.body.removeChild(ta);
+      ok ? resolve() : reject(new Error('copy failed'));
+    });
+  }
+
+  document.querySelectorAll('[data-copy]').forEach(function (link) {
+    var note = link.nextElementSibling;
+    if (note && !note.classList.contains('copy-note')) note = null;   // footer copies silently
+    var fadeTimer = null, clearTimer = null;
+
+    function show(message) {
+      if (!note) return;
+      clearTimeout(fadeTimer);
+      clearTimeout(clearTimer);
+      note.textContent = message;
+      note.classList.add('is-visible');
+      fadeTimer = setTimeout(function () {
+        note.classList.remove('is-visible');
+        // Empty the live region after the 0.5s fade so the next copy is announced again.
+        clearTimer = setTimeout(function () { note.textContent = ''; }, 600);
+      }, 2000);
+    }
+
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      copyText(link.getAttribute('data-copy'))
+        .then(function () { show('Copied.'); })
+        .catch(function () { show('Could not copy.'); });
+    });
+  });
+
   /* --- Email signup -------------------------------------------------
      Set data-endpoint on each <form data-signup> to a POST URL that
      accepts JSON {email}. Works as-is with Formspree, Buttondown,

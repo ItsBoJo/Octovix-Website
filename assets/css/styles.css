@@ -936,6 +936,25 @@ a { color: inherit; }
   transition: background-color .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
 }
 .about__mail:hover { background: #e6e9ee; border-color: #e6e9ee; color: #0a0a0b; }
+/* "Copied." confirmation shown after a click-to-copy email (main.js) */
+.copy-note {
+  opacity: 0;
+  transition: opacity .5s var(--ease);
+  pointer-events: none;
+}
+.copy-note.is-visible { opacity: 1; }
+.about__action { position: relative; }
+.about__copied {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + 10px);
+  color: #c9ced6;
+  font-size: .9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 @media (max-width: 700px) {
   .about__cols { grid-template-columns: minmax(0, 1fr); }
 }
